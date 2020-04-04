@@ -1,8 +1,9 @@
-from numba import njit
 import numpy as np
+from numba import njit
+
 
 @njit
-def simulate(S:np.array, I:np.array, N:int, lam=.3, gamma=0.11):
+def simulate(S: np.array, I: np.array, N: int, lam=0.3, gamma=0.11):
     """
     Simple SIR (Susceptible-Infected-Recovered) model simulation. 
     Given a numpy array of susceptible and infected time series,
@@ -20,11 +21,11 @@ def simulate(S:np.array, I:np.array, N:int, lam=.3, gamma=0.11):
         S (np.array), I (np.array)
           Updated time series
     """
-    for i in range(len(S)-1):
+    for i in range(len(S) - 1):
         I_t = I[i]
         S_t = S[i]
-        ds = -lam*I_t*S_t/N
-        di = -ds - gamma*I_t
-        S[i+1] = S_t + ds
-        I[i+1] = I_t + di
+        ds = -lam * I_t * S_t / N
+        di = -ds - gamma * I_t
+        S[i + 1] = S_t + ds
+        I[i + 1] = I_t + di
     return S, I
