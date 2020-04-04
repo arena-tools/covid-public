@@ -8,5 +8,9 @@ setup(name='arena-covid',
       install_requires=['pyarrow', 
                         'pandas==0.24.2',
                         's3fs==0.2.2', 
-                        'boto3']
+                        'boto3',
+                        'numba',
+                        'pymc3',
+                        'theano',
+                        'matplotlib']
 )
