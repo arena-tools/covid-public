@@ -65,9 +65,6 @@ s3_uri = 's3://arena-covid-public/covid_data/death_time_series_combined'
 df = pq.ParquetDataset(s3_uri, filesystem=fs).read().to_pandas()
 ```
 
-## How to contribute:
-...
-
 ## Attributions:
 
 1. NY Times data: https://github.com/nytimes/covid-19-data
