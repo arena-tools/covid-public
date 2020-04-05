@@ -1,31 +1,69 @@
 # Arena AI - Covid19:
  
  ## How to use these models:
- This repo contains python code for 3 different COVID-19 infection forecasting models, each at a state-level, for states within the U.S. There are 3 models: SIR, Curve fitting (IHME) and a Physics-based Phase Space model. Training data is available on S3, and updates daily. Attributions cite external public data sources that we use to create the training dataset, and external references for model methodology. 
+ This repo contains python code for 3 different COVID-19 infection forecasting models, each at a state-level, for states within the U.S. There are 3 models: SIR, Curve fitting (IHME) and a "Phase Space" model. Training data is available on S3, and updates daily. Attributions cite external public data sources that we use to create the training dataset, and external references for model methodology. 
 
  If you find this useful, please tell us by emailing us at team@arena-ai.com. To file an issue, use Github issues. We hope that you find this useful, and welcome your feedback!
 
 [More info on our work at: covid.arena-ai.com](https://covid.arena-ai.com) 
  ## Models:
  1. SIR
-```
+```python
 from arenacovid.models import sir
-....
+
+# Set total population
+N = 1e6
+DAYS_TO_PREDICT = 180
+
+# Initial Conditions
+S = np.zeros(DAYS_TO_PREDICT)
+I = np.zeros(DAYS_TO_PREDICT)
+I[0] = 1
+S[0] = N - I[0]
+
+S_t, I_t = simulate(S, I, N, lam=0.3, gamma=0.1)
+
 ```
  2. Phase Space
-```
+```python
 from arenacovid.models import phase_space
+
+# cumulative cases time series for a single State
+y = data.set_index('date')['cumulative_cases']
+m = PhaseFitter(tau=2, b_default=-.05).fit(y)
+
 ....
 ```
  3. Curve fitting
-```
+```python
 from arenacovid.models import curve_fitting
-....
+
+# Fit multiple states + countries at the same time
+m = HierarchicalCurveFitter(mu_lower_bound=mu_lower_bound, mu_upper_bound=mu_upper_bound)
+m.fit(data["new_deaths_per_million"].values, data["group_id"].values, data["t"].values)
+
 ```
  ## Training Data in S3:
- **Location**: _s3://arena-covid-public/covid_data_
-- dataset 1
-- dataset 2
+ **Daily Death Time Series**:
+-  `s3://arena-covid-public/covid_data/death_time_series_us`
+-  `s3://arena-covid-public/covid_data/death_time_series_combined`
+
+Normalized death data for each state in the US, as well as normalized death data for US + International Countries. Cumulative death rate are quoted "per million" of population.
+
+ **Daily Death + Case Series**:
+-  `s3://arena-covid-public/covid_data/nyt_cases`
+
+A processed, state-aggregated view of the New York Times reported case and deaths data.
+
+## Reading data
+
+```python
+import pyarrow.parquet as pq
+import s3fs
+fs = s3fs.S3FileSystem()
+s3_uri = 's3://arena-covid-public/covid_data/death_time_series_combined'
+df = pq.ParquetDataset(s3_uri, filesystem=fs).read().to_pandas()
+```
 
 ## How to contribute:
 ...
