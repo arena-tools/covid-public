@@ -34,12 +34,13 @@ from arenacovid.models import curve_fitting
 
 1. NY Times data: https://github.com/nytimes/covid-19-data
 2. UW Model: http://www.healthdata.org/covid
-3. COVID-tracking project: https://covidtracking.com/
-4. State and County level ICU bed and 60+ population data: https://khn.org/news/as-coronavirus-spreads-widely-millions-of-older-americans-live-in-counties-with-no-icu-beds/#lookup
-5. Government actions data: https://www.kff.org/health-costs/issue-brief/state-data-and-policy-actions-to-address-coronavirus/
-6. Government actions data: https://en.wikipedia.org/wiki/U.S._state_and_local_government_response_to_the_2020_coronavirus_pandemic
-7. Government actions data (crowdsourced by Rex Douglass): https://github.com/rexdouglass/TIGR 
-8. State and city populations: https://data.nber.org/data/census-intercensal-county-population.html
+3. Ferguson & Imperial College SIR model: https://spiral.imperial.ac.uk:8443/bitstream/10044/1/77482/5/Imperial%20College%20COVID19%20NPI%20modelling%2016-03-2020.pdf
+4. COVID-tracking project: https://covidtracking.com/
+5. State and County level ICU bed and 60+ population data: https://khn.org/news/as-coronavirus-spreads-widely-millions-of-older-americans-live-in-counties-with-no-icu-beds/#lookup
+6. Government actions data: https://www.kff.org/health-costs/issue-brief/state-data-and-policy-actions-to-address-coronavirus/
+7. Government actions data: https://en.wikipedia.org/wiki/U.S._state_and_local_government_response_to_the_2020_coronavirus_pandemic
+8. Government actions data (crowdsourced by Rex Douglass): https://github.com/rexdouglass/TIGR 
+9. State and city populations: https://data.nber.org/data/census-intercensal-county-population.html
 
 
 
