@@ -21,7 +21,7 @@ I = np.zeros(DAYS_TO_PREDICT)
 I[0] = 1
 S[0] = N - I[0]
 
-S_t, I_t = simulate(S, I, N, lam=0.3, gamma=0.1)
+S_t, I_t = sir.simulate(S, I, N, lam=0.3, gamma=0.1)
 
 ```
  2. Phase Space
@@ -30,7 +30,7 @@ from arenacovid.models import phase_space
 
 # cumulative cases time series for a single State
 y = data.set_index('date')['cumulative_cases']
-m = PhaseFitter(tau=2, b_default=-.05).fit(y)
+m = phase_space.PhaseFitter(tau=2, b_default=-.05).fit(y)
 
 ....
 ```
@@ -39,7 +39,7 @@ m = PhaseFitter(tau=2, b_default=-.05).fit(y)
 from arenacovid.models import curve_fitting
 
 # Fit multiple states + countries at the same time
-m = HierarchicalCurveFitter(mu_lower_bound=mu_lower_bound, mu_upper_bound=mu_upper_bound)
+m = curve_fitting.HierarchicalCurveFitter(mu_lower_bound=mu_lower_bound, mu_upper_bound=mu_upper_bound)
 m.fit(data["new_deaths_per_million"].values, data["group_id"].values, data["t"].values)
 
 ```
