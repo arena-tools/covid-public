@@ -3,7 +3,7 @@
  ## How to use these models:
  This repo contains python code for 3 different COVID-19 infection forecasting models, each at a state-level, for states within the U.S. There are 3 models: SIR, Curve fitting (IHME) and a Physics-based Phase Space model. Training data is available on S3, and updates daily. Attributions cite external public data sources that we use to create the training dataset, and external references for model methodology. 
 
- If you find this useful, please tell us by emailing us at contact@arena-ai.com. To file an issue, use Github issues. We hope that you find this useful, and welcome your feedback!
+ If you find this useful, please tell us by emailing us at team@arena-ai.com. To file an issue, use Github issues. We hope that you find this useful, and welcome your feedback!
 
 [More info on our work at: covid.arena-ai.com](https://covid.arena-ai.com) 
  ## Models:
