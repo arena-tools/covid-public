@@ -25,7 +25,7 @@ def hierarchical_normal(name, shape, mu=None, group_mu_variance=5, intra_group_v
 
 
 class HierarchicalCurveFitter:
-    def __init__(self, mu_lower_bound: float = 10, mu_upper_bound: float = 80, upper_bound_p=1000):
+    def __init__(self, mu_lower_bound: float = 10, mu_upper_bound: float = 80, upper_bound_p=1000, progressbar=False):
         """Hierarchical model for Curve Fitting (Normal Distribution)
         This class fits a Hierarchical Model of Normal Distribution curves
         against observed daily deaths per million of population in separates states,
@@ -36,10 +36,12 @@ class HierarchicalCurveFitter:
                             per Million deaths. Applies to all groups. 
             mu_upper_bound (float): Upper Bound for the mu parameter. Applies to all groups.
             upper_bound_p (float): upper bound for p, the scale/height of peak
+            progressbar (bool): display progress bar while sampling
         """
         self.upper_bound_p = 500
         self.mu_lower_bound = mu_lower_bound
         self.mu_upper_bound = mu_upper_bound
+        self.progressbar = False
 
     def fit(self, y, ids, times):
         """ Fit the given daily deaths / million, group ids and times.
@@ -81,7 +83,7 @@ class HierarchicalCurveFitter:
 
             pm.Poisson("likelihood", mu=yhat, observed=self.Y)
 
-            self.trace = pm.sample()
+            self.trace = pm.sample(progressbar=self.progressbar)
 
         return self
 
@@ -95,7 +97,9 @@ class HierarchicalCurveFitter:
         """
         self.ids.set_value(ids)
         self.times.set_value(times)
-        return pm.sample_posterior_predictive(self.trace, var_names=["yhat"], model=self.model, samples=1000)
+        return pm.sample_posterior_predictive(
+            self.trace, var_names=["yhat"], model=self.model, samples=1000, progressbar=self.progressbar
+        )
 
     def predict(self, ids, times, return_std=False):
         """ Predict deaths/million given group id's and observation times
