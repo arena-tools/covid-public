@@ -60,7 +60,7 @@ A processed, state-aggregated view of the New York Times reported case and death
 ```python
 import pyarrow.parquet as pq
 import s3fs
-fs = s3fs.S3FileSystem()
+fs = s3fs.S3FileSystem(anon=True)
 s3_uri = 's3://arena-covid-public/covid_data/death_time_series_combined'
 df = pq.ParquetDataset(s3_uri, filesystem=fs).read().to_pandas()
 ```
