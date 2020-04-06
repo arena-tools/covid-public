@@ -36,6 +36,7 @@ class HierarchicalCurveFitter:
                             per Million deaths. Applies to all groups. 
             mu_upper_bound (float): Upper Bound for the mu parameter. Applies to all groups.
             upper_bound_p (float): upper bound for p, the scale/height of peak
+            progressbar (bool): display progress bar while sampling
         """
         self.upper_bound_p = 500
         self.mu_lower_bound = mu_lower_bound
