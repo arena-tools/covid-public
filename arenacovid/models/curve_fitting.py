@@ -25,23 +25,23 @@ def hierarchical_normal(name, shape, mu=None, group_mu_variance=5, intra_group_v
 
 
 class HierarchicalCurveFitter:
-    def __init__(self, mu_lower_bound: float = 10, mu_upper_bound: float = 80, upper_bound_p=1000, progressbar=False):
+    def __init__(self, mu_lower_bound: float = 10, mu_upper_bound: float = 80, p_upper_bound: float=1000, progressbar=False):
         """Hierarchical model for Curve Fitting (Normal Distribution)
         This class fits a Hierarchical Model of Normal Distribution curves
         against observed daily deaths per million of population in separates states,
         counties, countries, etc. 
         Args:
-            mu_lower_bound (float): Lower Bound for the mu parameter, which is
+            mu_lower_bound (float / np.array): Lower Bound for the mu parameter, which is
                             the time since 0.3 deaths / million until "peak" death rate.
                             per Million deaths. Applies to all groups. 
-            mu_upper_bound (float): Upper Bound for the mu parameter. Applies to all groups.
-            upper_bound_p (float): upper bound for p, the scale/height of peak
+            mu_upper_bound (float / np.array): Upper Bound for the mu parameter. Applies to all groups.
+            p_upper_bound (float / np.array): upper bound for p, the scale/height of peak
             progressbar (bool): display progress bar while sampling
         """
-        self.upper_bound_p = 500
+        self.p_upper_bound = p_upper_bound
         self.mu_lower_bound = mu_lower_bound
         self.mu_upper_bound = mu_upper_bound
-        self.progressbar = False
+        self.progressbar = progressbar
 
     def fit(self, y, ids, times):
         """ Fit the given daily deaths / million, group ids and times.
@@ -73,7 +73,7 @@ class HierarchicalCurveFitter:
             sigma_err = pm.HalfCauchy("sigma_err", 25)
 
             # Cap deaths/million at 500
-            p = pm.Bound(pm.Lognormal, upper=self.upper_bound_p)("p", shared_p, sigma=p_err, shape=self.k)
+            p = pm.Bound(pm.Lognormal, upper=self.p_upper_bound)("p", shared_p, sigma=p_err, shape=self.k)
             mu = pm.Bound(pm.Lognormal, upper=self.mu_upper_bound, lower=self.mu_lower_bound)(
                 "mu", mu=shared_mu, sigma=mu_err, shape=self.k
             )
@@ -101,7 +101,7 @@ class HierarchicalCurveFitter:
             self.trace, var_names=["yhat"], model=self.model, samples=1000, progressbar=self.progressbar
         )
 
-    def predict(self, ids, times, return_std=False):
+    def predict(self, ids, times, return_std=False, alpha=0.05):
         """ Predict deaths/million given group id's and observation times
         Args:
             ids (np.array, int): The group id's for every observation
@@ -114,6 +114,6 @@ class HierarchicalCurveFitter:
         ppc = self.sample(ids, times)
         yhat = np.quantile(ppc["yhat"].T, 0.5, axis=1)
         if return_std:
-            return yhat, np.quantile(ppc["yhat"].T, 0.05, axis=1), np.quantile(ppc["yhat"].T, 0.95, axis=1)
+            return yhat, np.quantile(ppc["yhat"].T, alpha, axis=1), np.quantile(ppc["yhat"].T, alpha, axis=1)
         else:
             return yhat
